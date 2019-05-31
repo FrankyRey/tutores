@@ -1,1 +1,38 @@
+$primary: #8c8c8c;
+$secondary: #cccccc;
+
 @import "~bootstrap/scss/bootstrap";
+
+@import url('https://fonts.googleapis.com/css?family=Numans');
+
+html,body{
+background-image: url('http://sfwallpaper.com/images/gray-wallpaper-4.jpg');
+background-size: cover;
+background-repeat: no-repeat;
+height: 100%;
+font-family: 'Numans', sans-serif;
+}
+
+.container{
+height: 100%;
+align-content: center;
+}
+
+.card{
+margin-top: 5rem;
+margin-bottom: auto;
+background-color: rgba(0,0,0,0.2) !important;
+}
+
+.card-header h3{
+color: white;
+}
+
+input:focus{
+outline: 0 0 0 0  !important;
+box-shadow: 0 0 0 0 !important;
+}
+
+.logo{
+	width: 15%;
+}
