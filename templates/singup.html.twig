@@ -9,9 +9,9 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="mr-auto">
-        <a class="btn btn-primary" href="{{ path('signup') }}" role="button">
-          <i class="fas fa-user-plus"></i>
-          Registrate
+        <a class="btn btn-primary" href="{{ path('signin') }}" role="button">
+          <span><i class="fas fa-sign-in-alt"></i><span>
+          <span>Inicia Sesión<span>
         </a>
       </div>
     </div>
@@ -20,42 +20,9 @@
   <div class="d-flex justify-content-center h-100">
     <div class="card">
       <div class="card-header text-center">
-        <h3>Inicia Sesión</h3>
+        <h3>Registrate</h3>
       </div>
       <div class="card-body">
-        <form>
-          <div class="input-group form-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-user"></i></span>
-            </div>
-            <input type="text" class="form-control" placeholder="Usuario">
-          </div>
-          <div class="input-group form-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text"><i class="fas fa-key"></i></span>
-            </div>
-            <input type="password" class="form-control" placeholder="Contraseña">
-          </div>
-          <hr>
-          <div class="form-group">
-            <input type="submit" value="Ingresar" class="btn btn-primary float-right">
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Registrate</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
         <form>
           <div class="input-group form-group">
             <div class="input-group form-group">
@@ -87,11 +54,11 @@
             </div>
             <input type="password" class="form-control" placeholder="Repita contraseña">
           </div>
+          <hr>
+          <div class="form-group">
+            <input type="submit" value="Registrar" class="btn btn-primary float-right">
+          </div>
         </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Registrar</button>
       </div>
     </div>
   </div>

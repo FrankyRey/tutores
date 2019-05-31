@@ -8,15 +8,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class MainController extends AbstractController
 {
     /**
-     * @Route("/", name="home")
+     * @Route("/", name="signin")
      */
     public function index()
     {
-        return $this->render('index.html.twig');
+        return $this->render('main/index.html.twig');
     }
 
     /**
-     * @Route("/registrate", name="singup")
+     * @Route("/registrate", name="signup")
      */
     public function singup()
     {
