@@ -1,5 +1,9 @@
 {% extends '@AdminLTE/FOSUserBundle/Resetting/request.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
 {% block page_stylesheets %}
 	<style>
 		.login-box{
@@ -15,6 +19,7 @@
     <p><img class="logo" src="{{ asset('build/logo.png') }}" style="width: 50%;"></p>
     <p>Sistema de Registro de Tutores</p>
 {% endblock %}
-{% block login_box_msg %}
-	Recuperar contraseña
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}

@@ -1,5 +1,9 @@
 {% extends '@AdminLTE/FOSUserBundle/Registration/register.html.twig' %}
 
+{% block stylesheets %}
+    {{ encore_entry_link_tags('app') }}
+{% endblock %}
+
 {% block page_stylesheets %}
 	<style>
 		.login-box{
@@ -17,4 +21,8 @@
 {% endblock %}
 {% block login_box_msg %}
 	Regístrate
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }}
 {% endblock %}

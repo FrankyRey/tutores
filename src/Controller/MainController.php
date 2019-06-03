@@ -12,7 +12,7 @@ class MainController extends AbstractController
      */
     public function index()
     {
-        return $this->render('main/index.html.twig');
+        return $this->render('bundles/FOSUserBundle/layout.html.twig');
     }
 
     /**
@@ -21,5 +21,37 @@ class MainController extends AbstractController
     public function singup()
     {
     	return $this->render('singup.html.twig');
+    }
+
+    /**
+     * @Route("/solicitud", name="solicitud")
+     */
+    public function solicitud()
+    {
+        return $this->render('bundles/FOSUserBundle/solicitud.html.twig');
+    }
+
+    /**
+     * @Route("/convocatoria", name="convocatoria")
+     */
+    public function convocatoria()
+    {
+        return $this->render('bundles/FOSUserBundle/solicitud.html.twig');
+    }
+
+    /**
+     * @Route("/resutlados", name="resultados")
+     */
+    public function resultados()
+    {
+        return $this->render('bundles/FOSUserBundle/solicitud.html.twig');
+    }
+
+    /**
+     * @Route("/profile", name="profile")
+     */
+    public function profile()
+    {
+        return $this->render('bundles/FOSUserBundle/solicitud.html.twig');
     }
 }
