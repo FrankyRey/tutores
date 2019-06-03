@@ -1,1 +1,20 @@
 {% extends '@AdminLTE/FOSUserBundle/Registration/register.html.twig' %}
+
+{% block page_stylesheets %}
+	<style>
+		.login-box{
+			margin: 0% auto;
+		}
+		.login-logo{
+			margin-bottom: 5px !important;
+		}
+	</style>
+{% endblock %}
+
+{% block logo_login %}
+    <p><img class="logo" src="{{ asset('build/logo.png') }}" style="width: 50%;"></p>
+    <p>Sistema de Registro de Tutores</p>
+{% endblock %}
+{% block login_box_msg %}
+	Regístrate
+{% endblock %}
