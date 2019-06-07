@@ -22,11 +22,13 @@ class MenuBuilderSubscriber implements EventSubscriberInterface
         $solicitud = new MenuItemModel('solicitud','Solicitud','solicitud',[], 'far fa-clipboard');
         $convocatoria = new MenuItemModel('convocatoria','Convocatoria','convocatoria',[], 'far fa-file-pdf');
         $resultados = new MenuItemModel('resultados','Resultados','resultados',[], 'fas fa-search');
+        $expedientes = new MenuItemModel('expedientes','Expedientes','expedientes',[], 'fas fa-search');
         
         $event->addItem($inicio);
         $event->addItem($solicitud);
         $event->addItem($convocatoria);
         $event->addItem($resultados);
+        $event->addItem($expedientes);
 
         $this->activateByRoute(
             $event->getRequest()->get('_route'),

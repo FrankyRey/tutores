@@ -1,4 +1,4 @@
-{% extends '@AdminLTE/FOSUserBundle/layout.html.twig' %}
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
 
 {% block logo_mini %}
     <img src="{{ asset('build/logo_small.png') }}" width="40" />
@@ -8,4 +8,82 @@
     <img src="{{ asset('build/logo.png') }}" width="100" />
 {% endblock %}
 
-{% block page_content %}{% endblock %}
+{% block page_title %}
+	Validación de CURP
+{% endblock %}
+
+{% block page_subtitle %}
+    .
+{% endblock %}
+
+{% block page_content %}
+	<div class="row">
+		<div class="col-md-6 col-md-offset-3">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="panel-content">
+						<p>Antes de empezar con su solicitud tenemos que validar su situación laboral, por favor ingrese su CURP</p>
+  						<div class="form-group" id="div-curp">
+    						<input type="text" class="form-control" id="input-curp" placeholder="CURP" maxlength="18" minlength="18" style="text-transform:uppercase;">
+  						</div>
+  						<button type="submit" class="btn btn-primary validar">Validar</button>
+  						<div class="ajax-results">
+  						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script type="text/javascript">
+    	$(document).on('click', 'button.validar', function(){
+            that = $(this);
+            $.ajax({
+                url:'{{ (path('validaCurp')) }}',
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "curp": document.getElementById("input-curp").value
+                },
+                async: true,
+                success: function (data)
+                {
+                    if(data.encontrado)
+                    {
+                    	$('div.ajax-results').html(data.output);
+                    	$('button.validar').attr('disabled', 'disabled');
+                    	$('div#div-curp').removeClass('has-error');
+                    	$('input#input-curp').attr('disabled', 'disabled');
+                    }
+                    else
+                    {
+                    	$('div.ajax-results').html(data.output);
+                    	$('div#div-curp').addClass('has-error');
+                    }
+                },
+                error: function(data)
+                {
+                	console.log(data)
+                	$('div.ajax-results').html(data.responseText);
+                }
+            });
+            return false;
+
+        });
+        
+        $(document).on('change', 'select.form-control', function(){
+        	console.log($('select.form-control option:selected').text())
+        	if($('select.form-control option:selected').text()!=='--Seleccione una opción--')
+        	{
+        		$('div.solicitud').html('<button class="btn btn-primary solicitud">Iniciar solicitud</button');
+        	}
+        	else
+        	{
+        		$('button.solicitud').remove();
+        	}
+        });
+    </script>
+{% endblock %}
