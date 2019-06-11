@@ -36,7 +36,7 @@
 	</div>
 {% endblock %}
 
-{% block javascripts %}
+{% block javascripts_page %}
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
     	$(document).on('click', 'button.validar', function(){
@@ -78,7 +78,7 @@
         	console.log($('select.form-control option:selected').text())
         	if($('select.form-control option:selected').text()!=='--Seleccione una opción--')
         	{
-        		$('div.solicitud').html('<button class="btn btn-primary solicitud">Iniciar solicitud</button');
+        		$('div.solicitud').html('<a class="btn btn-primary solicitud" href="{{ path('nueva-solicitud') }}">Iniciar solicitud</a');
         	}
         	else
         	{

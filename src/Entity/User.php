@@ -23,5 +23,11 @@ class User extends BaseUser
     {
         parent::__construct();
         // your own logic
+        $this->addRole("ROLE_ADMIN");
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 }

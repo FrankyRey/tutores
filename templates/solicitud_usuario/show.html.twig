@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SolicitudUsuario{% endblock %}
+
+{% block body %}
+    <h1>SolicitudUsuario</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>IdSolicitudUsuario</th>
+                <td>{{ solicitud_usuario.idSolicitudUsuario }}</td>
+            </tr>
+            <tr>
+                <th>ApellidoPaterno</th>
+                <td>{{ solicitud_usuario.apellidoPaterno }}</td>
+            </tr>
+            <tr>
+                <th>ApellidoMaterno</th>
+                <td>{{ solicitud_usuario.apellidoMaterno }}</td>
+            </tr>
+            <tr>
+                <th>Nombre</th>
+                <td>{{ solicitud_usuario.nombre }}</td>
+            </tr>
+            <tr>
+                <th>Rfc</th>
+                <td>{{ solicitud_usuario.rfc }}</td>
+            </tr>
+            <tr>
+                <th>Curp</th>
+                <td>{{ solicitud_usuario.curp }}</td>
+            </tr>
+            <tr>
+                <th>Edad</th>
+                <td>{{ solicitud_usuario.edad }}</td>
+            </tr>
+            <tr>
+                <th>Calle</th>
+                <td>{{ solicitud_usuario.calle }}</td>
+            </tr>
+            <tr>
+                <th>NoExterior</th>
+                <td>{{ solicitud_usuario.noExterior }}</td>
+            </tr>
+            <tr>
+                <th>NoInterior</th>
+                <td>{{ solicitud_usuario.noInterior }}</td>
+            </tr>
+            <tr>
+                <th>TelefonoFijo</th>
+                <td>{{ solicitud_usuario.telefonoFijo }}</td>
+            </tr>
+            <tr>
+                <th>TelefonoCelular</th>
+                <td>{{ solicitud_usuario.telefonoCelular }}</td>
+            </tr>
+            <tr>
+                <th>SolicitudUsuariocol</th>
+                <td>{{ solicitud_usuario.solicitudUsuariocol }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('solicitud_usuario_index') }}">back to list</a>
+
+    <a href="{{ path('solicitud_usuario_edit', {'idSolicitudUsuario': solicitud_usuario.idSolicitudUsuario}) }}">edit</a>
+
+    {{ include('solicitud_usuario/_delete_form.html.twig') }}
+{% endblock %}

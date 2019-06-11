@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SolicitudUsuario index{% endblock %}
+
+{% block body %}
+    <h1>SolicitudUsuario index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>IdSolicitudUsuario</th>
+                <th>ApellidoPaterno</th>
+                <th>ApellidoMaterno</th>
+                <th>Nombre</th>
+                <th>Rfc</th>
+                <th>Curp</th>
+                <th>Edad</th>
+                <th>Calle</th>
+                <th>NoExterior</th>
+                <th>NoInterior</th>
+                <th>TelefonoFijo</th>
+                <th>TelefonoCelular</th>
+                <th>SolicitudUsuariocol</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for solicitud_usuario in solicitud_usuarios %}
+            <tr>
+                <td>{{ solicitud_usuario.idSolicitudUsuario }}</td>
+                <td>{{ solicitud_usuario.apellidoPaterno }}</td>
+                <td>{{ solicitud_usuario.apellidoMaterno }}</td>
+                <td>{{ solicitud_usuario.nombre }}</td>
+                <td>{{ solicitud_usuario.rfc }}</td>
+                <td>{{ solicitud_usuario.curp }}</td>
+                <td>{{ solicitud_usuario.edad }}</td>
+                <td>{{ solicitud_usuario.calle }}</td>
+                <td>{{ solicitud_usuario.noExterior }}</td>
+                <td>{{ solicitud_usuario.noInterior }}</td>
+                <td>{{ solicitud_usuario.telefonoFijo }}</td>
+                <td>{{ solicitud_usuario.telefonoCelular }}</td>
+                <td>{{ solicitud_usuario.solicitudUsuariocol }}</td>
+                <td>
+                    <a href="{{ path('solicitud_usuario_show', {'idSolicitudUsuario': solicitud_usuario.idSolicitudUsuario}) }}">show</a>
+                    <a href="{{ path('solicitud_usuario_edit', {'idSolicitudUsuario': solicitud_usuario.idSolicitudUsuario}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="14">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('solicitud_usuario_new') }}">Create new</a>
+{% endblock %}

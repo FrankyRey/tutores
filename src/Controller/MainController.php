@@ -2,12 +2,22 @@
 
 namespace App\Controller;
 
+//Librerias Symfony
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use App\Entity\NivelConvocatoria;
 use Doctrine\ORM\EntityManagerInterface;
+
+//Entidades
+use App\Entity\NivelConvocatoria;
+use App\Entity\SolicitudUsuario;
+use App\Entity\Municipios;
+use App\Entity\EntidadesFederativas;
+use App\Form\SolicitudUsuarioType;
+
+//Tipos de Entrada de datos
+
 
 class MainController extends AbstractController
 {
@@ -87,5 +97,28 @@ class MainController extends AbstractController
         $arrData = ['output' => $output,
                     'encontrado' => $encontrado];
         return new JsonResponse($arrData);
+    }
+
+    /**
+     * @Route("/user/nueva-solicitud", name="nueva-solicitud")
+     */
+    public function nuevaSolicitud(Request $request)
+    {
+        $solicitudUsuario = new SolicitudUsuario();
+        $form = $this->createForm(SolicitudUsuarioType::class, $solicitudUsuario);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($solicitudUsuario);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('bundles/FOSUserBundle/nueva-solicitud.html.twig', [
+            'solicitud_usuario' => $solicitudUsuario,
+            'form' => $form->createView()
+        ]);
     }
 }
