@@ -31,7 +31,6 @@
                             <button class="btn">{{ button_label|default('Save') }}</button>
                         {{ form_end(form) }}
                         <div class="ajax-results">
-                            {{ dump(solicitud_usuario) }}
                         </div>
 					</div>
 				</div>
@@ -42,23 +41,35 @@
 
 {% block javascripts_page %}
     <script>
-        var $entidad = $('#solicitud_usuario_idEntidadFederativa');
-        $entidad.change(function () {
-            var $form = $(this).closest('form');
-            var data = {$form};
-            console.log($entidad);
-            data[$entidad.attr('name')] = $entidad.val();
+        $('#solicitud_usuario_idEntidadFederativa').change(function () {
+            var citySelector = $(this);
+            console.log(citySelector.val());
+            // Request the neighborhoods of the selected city.
             $.ajax({
-                url : $form.attr('action'),
-                type: $form.attr('method'),
-                data : data,
-                success: function(html) {
-                    // Replace current position field ...
-                    $('#solicitud_usuario_idMunicipioEntidadFederativa').replaceWith(
-                    // ... with the returned one from the AJAX response.
-                        $(html).find('#solicitud_usuario_idMunicipioEntidadFederativa')
-                    );
-                // Position field now displays the appropriate positions.
+                url: "{{ path('get-municipios') }}",
+                type: "POST",
+                dataType: "json",
+                data: {
+                    "cityid": citySelector.val()
+                },
+                success: function (data) {
+                    console.log(data);
+                    var neighborhoodSelect = $("#solicitud_usuario_idMunicipioEntidadFederativa");
+
+                    // Remove current options
+                    neighborhoodSelect.html('');
+                    
+                    // Empty value ...
+                    neighborhoodSelect.append('<option value> Select a neighborhood of ' + citySelector.find("option:selected").text() + ' ...</option>');
+                    
+                    
+                    $.each(data, function (key, data) {
+                        neighborhoodSelect.append('<option value="' + data.id + '">' + data.nombre + '</option>');
+                    });
+                },
+                error: function (data) {
+                    alert("An error ocurred while loading data ...");
+                    $('div.ajax-results').html(data.responseText);
                 }
             });
         });

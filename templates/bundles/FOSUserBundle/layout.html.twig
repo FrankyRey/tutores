@@ -8,4 +8,8 @@
     <img src="{{ asset('build/logo.png') }}" width="100" />
 {% endblock %}
 
-{% block page_content %}{% endblock %}
+{% block page_content %}
+	{% for solicitud in solicitudes %}
+	    {{ solicitud.curp }}
+	{% endfor %}
+{% endblock %}

@@ -37,6 +37,8 @@ class SolicitudUsuarioType extends AbstractType
         $builder->add('calle', TextType::class);
         $builder->add('noExterior', TextType::class);
         $builder->add('noInterior', TextType::class);
+        $builder->add('codigoPostal', TextType::class);
+        $builder->add('colonia', TextType::class);
         $builder->add('idEntidadFederativa', EntityType::class, [
             'placeholder' => 'Select a City...',
             'class' => EntidadesFederativas::class,
@@ -44,14 +46,13 @@ class SolicitudUsuarioType extends AbstractType
         ]);
         $builder->addEventListener(FormEvents::PRE_SET_DATA, array($this, 'onPreSetData'));
         //$builder->get('idEntidadFederativa')->addEventListener(FormEvents::POST_SUBMIT, array($this, 'onPreSetData'));
-        //$builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, array($this, 'onPreSubmit'));
     }
 
     protected function addElements(FormInterface $form, EntidadesFederativas $entidad = null) {
         // 4. Add the province element
         
         // Neighborhoods empty, unless there is a selected City (Edit View)
-        $municipios = array();
         
         // If there is a city stored in the Person entity, load the neighborhoods of it
         if ($entidad) {
@@ -59,7 +60,7 @@ class SolicitudUsuarioType extends AbstractType
             $repoMunicipios = $this->em->getRepository(Municipios::class);
             
             $municipios = $repoMunicipios->findBy(
-                ['entidadesFederativasEntidadFederativa' => $entidad->getIdEntidadFederativa()]
+                ['idEntidadFederativa' => $entidad->getIdEntidadFederativa()]
             );
 
             // Add the Neighborhoods field with the properly data
@@ -76,29 +77,33 @@ class SolicitudUsuarioType extends AbstractType
         $form = $event->getForm();
         $data = $event->getData();
         $municipio = new Municipios();
+        $entidad = new EntidadesFederativas();
         
-        print_r($data);
+        print_r(var_dump($data['idEntidadFederativa']));
         // Search for selected City and convert it into an Entity
+        $idEntidad = $data['idEntidadFederativa'];
+        $idMunicipio = $data['idMunicipioEntidadFederativa'];
+
         $entidad = $this->em->getRepository(EntidadesFederativas::class)->findOneBy([
-            'idEntidadFederativa' => $data['idEntidadFederativa']
+            'idEntidadFederativa' => (int)$idEntidad
         ]);
 
         $municipio = $this->em->getRepository(Municipios::class)->findOneBy([
-            'entidadesFederativasEntidadFederativa' => $data['idEntidadFederativa'],
-            'idMunicipios' => $data['idMunicipios']
+            'idEntidadFederativa' => (int)$idEntidad,
+            'idMunicipios' => (int)$idMunicipio
         ]);
         
         $this->addElements($form, $entidad);
     }
 
     function onPreSetData(FormEvent $event) {
-        $solicitud = $event->getData();
+        $data = $event->getData();
         $form = $event->getForm();
+        $municipio = new Municipios();
         $entidad = new EntidadesFederativas();
 
         // When you create a new person, the City is always empty
-        print_r($solicitud);
-        $entidad = $solicitud->getIdEntidadFederativa();
+        $entidad = $data->getIdEntidadFederativa();
         
         $municipios = [];
 
@@ -117,7 +122,8 @@ class SolicitudUsuarioType extends AbstractType
             'class' => Municipios::class,
             'choices' => $municipios
         ]);
-        //$this->addElements($form, $entidad);
+
+        $this->addElements($form, $entidad);
     }
 
     public function configureOptions(OptionsResolver $resolver)

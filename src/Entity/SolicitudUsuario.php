@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SolicitudUsuario
  *
- * @ORM\Table(name="solicitud_usuario", indexes={@ORM\Index(name="fk_solicitud_usuario_municipios", columns={"id_municipio_entidad_federativa", "id_municipio"}), @ORM\Index(name="fk_solicitud_usuario_entidad_federativa", columns={"id_entidad_federativa"})})
+ * @ORM\Table(name="solicitud_usuario", indexes={@ORM\Index(name="fk_solicitud_usuario_fos_user1_idx", columns={"id_user"}), @ORM\Index(name="fk_solicitud_usuario_municipios", columns={"id_municipio_entidad_federativa", "id_municipio"}), @ORM\Index(name="fk_solicitud_usuario_entidad_federativa", columns={"id_entidad_federativa"})})
  * @ORM\Entity
  */
 class SolicitudUsuario
@@ -99,6 +99,27 @@ class SolicitudUsuario
     private $telefonoCelular;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="nivel_convocatoria", type="string", length=15, nullable=false)
+     */
+    private $nivelConvocatoria;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="codigo_postal", type="string", length=5, nullable=true)
+     */
+    private $codigoPostal;
+
+    /**
+     * @var string|null
+     *
+     * @ORM\Column(name="colonia", type="string", length=200, nullable=true)
+     */
+    private $colonia;
+
+    /**
      * @var \EntidadesFederativas
      *
      * @ORM\ManyToOne(targetEntity="EntidadesFederativas")
@@ -118,6 +139,16 @@ class SolicitudUsuario
      * })
      */
     private $idMunicipioEntidadFederativa;
+
+    /**
+     * @var \FosUser
+     *
+     * @ORM\ManyToOne(targetEntity="FosUser")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="id_user", referencedColumnName="id")
+     * })
+     */
+    private $idUser;
 
     public function getIdSolicitudUsuario(): ?int
     {
@@ -256,6 +287,42 @@ class SolicitudUsuario
         return $this;
     }
 
+    public function getNivelConvocatoria(): ?string
+    {
+        return $this->nivelConvocatoria;
+    }
+
+    public function setNivelConvocatoria(string $nivelConvocatoria): self
+    {
+        $this->nivelConvocatoria = $nivelConvocatoria;
+
+        return $this;
+    }
+
+    public function getCodigoPostal(): ?string
+    {
+        return $this->codigoPostal;
+    }
+
+    public function setCodigoPostal(?string $codigoPostal): self
+    {
+        $this->codigoPostal = $codigoPostal;
+
+        return $this;
+    }
+
+    public function getColonia(): ?string
+    {
+        return $this->colonia;
+    }
+
+    public function setColonia(?string $colonia): self
+    {
+        $this->colonia = $colonia;
+
+        return $this;
+    }
+
     public function getIdEntidadFederativa(): ?EntidadesFederativas
     {
         return $this->idEntidadFederativa;
@@ -276,6 +343,18 @@ class SolicitudUsuario
     public function setIdMunicipioEntidadFederativa(?Municipios $idMunicipioEntidadFederativa): self
     {
         $this->idMunicipioEntidadFederativa = $idMunicipioEntidadFederativa;
+
+        return $this;
+    }
+
+    public function getIdUser(): ?FosUser
+    {
+        return $this->idUser;
+    }
+
+    public function setIdUser(?FosUser $idUser): self
+    {
+        $this->idUser = $idUser;
 
         return $this;
     }

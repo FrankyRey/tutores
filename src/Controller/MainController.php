@@ -14,6 +14,7 @@ use App\Entity\NivelConvocatoria;
 use App\Entity\SolicitudUsuario;
 use App\Entity\Municipios;
 use App\Entity\EntidadesFederativas;
+use App\Entity\FosUser;
 use App\Form\SolicitudUsuarioType;
 
 //Tipos de Entrada de datos
@@ -26,7 +27,14 @@ class MainController extends AbstractController
      */
     public function index()
     {
-        return $this->render('bundles/FOSUserBundle/layout.html.twig');
+        $user = $this->getUser();
+        $repository = $this->getDoctrine()->getRepository(SolicitudUsuario::class);
+        $solicitudes = $repository->findBy([
+            'idUser' => $user->getId()
+        ]);
+        return $this->render('bundles/FOSUserBundle/layout.html.twig', [
+            'solicitudes' => $solicitudes
+        ]);
     }
 
     /**
@@ -105,6 +113,16 @@ class MainController extends AbstractController
     public function nuevaSolicitud(Request $request)
     {
         $solicitudUsuario = new SolicitudUsuario();
+        $user = new FosUser();
+
+        $curp = $request->query->get('curp');
+        $solicitudUsuario->setCurp($curp);
+
+        $solicitudUsuario->setNivelConvocatoria($request->query->get('nivel'));
+
+        $user = $this->getDoctrine()->getRepository(FosUser::class)->findOneById($this->getUser()->getId());
+        $solicitudUsuario->setIdUser($user);
+
         $form = $this->createForm(SolicitudUsuarioType::class, $solicitudUsuario);
         $form->handleRequest($request);
         

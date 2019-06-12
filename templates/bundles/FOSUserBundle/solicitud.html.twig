@@ -75,10 +75,15 @@
         });
         
         $(document).on('change', 'select.form-control', function(){
-        	console.log($('select.form-control option:selected').text())
+            var curpS = document.getElementById("input-curp").value.toUpperCase();
+            var nivelS = 'BÁSICA';
+            var url = '<a class="btn btn-primary solicitud" href="{{ path('nueva-solicitud', {'curp': 'sustituirC', 'nivel': 'sustituirN'}) }}">Iniciar solicitud</a>'; 
+            url = url.replace("sustituirC", curpS);
+            url = url.replace("sustituirN", nivelS);
+        	console.log(url);
         	if($('select.form-control option:selected').text()!=='--Seleccione una opción--')
         	{
-        		$('div.solicitud').html('<a class="btn btn-primary solicitud" href="{{ path('nueva-solicitud') }}">Iniciar solicitud</a');
+        		$('div.solicitud').html(url);
         	}
         	else
         	{

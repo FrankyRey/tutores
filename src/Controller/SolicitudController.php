@@ -34,10 +34,10 @@ class SolicitudController extends Controller
         $repository = $this->getDoctrine()->getRepository(Municipios::class);
         $entidad = $request->request->get('cityid');
         $resultados = $repository->findBy(['idEntidadFederativa' => $entidad]);
+        $responseArray = array();
 
         if($resultados)
         {
-            $responseArray = array();
             foreach ($resultados as $valor)
             {
                 $responseArray [] = array(
