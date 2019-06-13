@@ -76,7 +76,7 @@
         
         $(document).on('change', 'select.form-control', function(){
             var curpS = document.getElementById("input-curp").value.toUpperCase();
-            var nivelS = 'BÁSICA';
+            var nivelS = document.getElementById("nivel-convocatoria").value.toUpperCase();
             var url = '<a class="btn btn-primary solicitud" href="{{ path('nueva-solicitud', {'curp': 'sustituirC', 'nivel': 'sustituirN'}) }}">Iniciar solicitud</a>'; 
             url = url.replace("sustituirC", curpS);
             url = url.replace("sustituirN", nivelS);

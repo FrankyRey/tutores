@@ -12,10 +12,12 @@ use Doctrine\ORM\EntityManagerInterface;
 //Entidades
 use App\Entity\NivelConvocatoria;
 use App\Entity\SolicitudUsuario;
+use App\Entity\SolicitudControl;
+use App\Entity\SolicitudCentro;
 use App\Entity\Municipios;
 use App\Entity\EntidadesFederativas;
-use App\Entity\FosUser;
 use App\Form\SolicitudUsuarioType;
+use App\Form\SolicitudCentroType;
 
 //Tipos de Entrada de datos
 
@@ -29,12 +31,19 @@ class MainController extends AbstractController
     {
         $user = $this->getUser();
         $repository = $this->getDoctrine()->getRepository(SolicitudUsuario::class);
-        $solicitudes = $repository->findBy([
-            'idUser' => $user->getId()
-        ]);
-        return $this->render('bundles/FOSUserBundle/layout.html.twig', [
-            'solicitudes' => $solicitudes
-        ]);
+        if($user)
+        {
+            $solicitudes = $repository->findBy([
+                'idUser' => $user->getId()
+            ]);
+            return $this->render('bundles/FOSUserBundle/layout.html.twig', [
+                'solicitudes' => $solicitudes
+            ]);
+        }
+        else
+        {
+            return $this->redirect('/login');
+        }
     }
 
     /**
@@ -84,17 +93,35 @@ class MainController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(NivelConvocatoria::class);
         $curp = $request->request->get('curp');
-        $resultados = $repository->findBy(['curp' => $curp]);
+        $resultados = $repository->findBy(['curp' => $curp],['nivelConvocatoria' => 'ASC']);
 
         if($resultados)
         {
-            $output = '<p>Por favor seleccione en que nivel desea impartir la tutoria.</p><div class="form-group"><select class="form-control"><option>--Seleccione una opción--</option>';
+            $contadorB = 0;
+            $solicitudRepository = $this->getDoctrine()->getRepository(SolicitudUsuario::class);
+            $output = '<p>Por favor seleccione en que nivel desea impartir la tutoria.</p><div class="form-group"><select class="form-control" id="nivel-convocatoria"><option>--Seleccione una opción--</option>';
             foreach ($resultados as $valor)
             {
-                $output = $output.'<option value="'.$valor->getNivelConvocatoria().'">'.$valor->getNivelConvocatoria().'</option>';
+                $solicitud = $solicitudRepository->findOneBy(['nivelConvocatoria' => $valor->getNivelConvocatoria()]);
+                if(!$solicitud)
+                {
+                    $output = $output.'<option value="'.$valor->getNivelConvocatoria().'">'.$valor->getNivelConvocatoria().'</option>';
+                }
+                else
+                {
+                    $contadorB = $contadorB+1;
+                    $encontrado = 1;
+                }
             }
-            $output = $output.'</select></div><div class="solicitud"></div>';
-            $encontrado = 1;
+            if(count($resultados)==$contadorB)
+            {
+                $output = '<p class="text-danger">Usted ya cuenta con el máximo de solicitudes permitidas</p>';
+            }
+            else
+            {
+                $output = $output.'</select></div><div class="solicitud"></div>';
+                $encontrado = 1;
+            }
         }
         else
         {
@@ -113,15 +140,18 @@ class MainController extends AbstractController
     public function nuevaSolicitud(Request $request)
     {
         $solicitudUsuario = new SolicitudUsuario();
-        $user = new FosUser();
 
         $curp = $request->query->get('curp');
+        if(!$curp)
+        {
+            return $this->redirectToRoute('solicitud');
+        }
         $solicitudUsuario->setCurp($curp);
 
         $solicitudUsuario->setNivelConvocatoria($request->query->get('nivel'));
 
-        $user = $this->getDoctrine()->getRepository(FosUser::class)->findOneById($this->getUser()->getId());
-        $solicitudUsuario->setIdUser($user);
+        //$user = $this->getUser()->getId());
+        $solicitudUsuario->setIdUser($this->getUser());
 
         $form = $this->createForm(SolicitudUsuarioType::class, $solicitudUsuario);
         $form->handleRequest($request);
@@ -131,12 +161,37 @@ class MainController extends AbstractController
             $entityManager->persist($solicitudUsuario);
             $entityManager->flush();
 
-            return $this->redirectToRoute('home');
+            return $this->redirect('/user/solicitud-centro?curp='.$curp);
         }
 
         return $this->render('bundles/FOSUserBundle/nueva-solicitud.html.twig', [
             'solicitud_usuario' => $solicitudUsuario,
             'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/user/solicitud-centro", name="solicitud-centro")
+     */
+    public function solicitudCentro(Request $request)
+    {
+        $curp = $request->query->get('curp');
+
+        $solicitudCentro = new SolicitudCentro();
+        $form = $this->createForm(SolicitudCentroType::class, $solicitudCentro, ['curp' => $curp]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($solicitudCentro);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('bundles/FOSUserBundle/solicitud-centro.html.twig', [
+            'colicitud_centro' => $solicitudCentro,
+            'form' => $form->createView(),
         ]);
     }
 }

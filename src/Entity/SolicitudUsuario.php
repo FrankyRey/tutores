@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SolicitudUsuario
  *
- * @ORM\Table(name="solicitud_usuario", indexes={@ORM\Index(name="fk_solicitud_usuario_fos_user1_idx", columns={"id_user"}), @ORM\Index(name="fk_solicitud_usuario_municipios", columns={"id_municipio_entidad_federativa", "id_municipio"}), @ORM\Index(name="fk_solicitud_usuario_entidad_federativa", columns={"id_entidad_federativa"})})
+ * @ORM\Table(name="solicitud_usuario", indexes={@ORM\Index(name="fk_solicitud_usuario_entidad_federativa", columns={"id_entidad_federativa"}), @ORM\Index(name="fk_solicitud_usuario_municipios", columns={"id_municipio_entidad_federativa", "id_municipio"}), @ORM\Index(name="fk_solicitud_usuario_fos_user1_idx", columns={"id_user"})})
  * @ORM\Entity
  */
 class SolicitudUsuario
@@ -141,9 +141,9 @@ class SolicitudUsuario
     private $idMunicipioEntidadFederativa;
 
     /**
-     * @var \FosUser
+     * @var \User
      *
-     * @ORM\ManyToOne(targetEntity="FosUser")
+     * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="id_user", referencedColumnName="id")
      * })
@@ -347,12 +347,12 @@ class SolicitudUsuario
         return $this;
     }
 
-    public function getIdUser(): ?FosUser
+    public function getIdUser(): ?User
     {
         return $this->idUser;
     }
 
-    public function setIdUser(?FosUser $idUser): self
+    public function setIdUser(?User $idUser): self
     {
         $this->idUser = $idUser;
 
