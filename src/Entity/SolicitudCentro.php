@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * SolicitudCentro
  *
- * @ORM\Table(name="solicitud_centro", indexes={@ORM\Index(name="fk_solicitud_centro_solicitud_usuario1_idx", columns={"id_usuario"}), @ORM\Index(name="fk_solicitud_centro_niveles_educativos1_idx", columns={"id_nivel"})})
+ * @ORM\Table(name="solicitud_centro", indexes={@ORM\Index(name="fk_solicitud_centro_solicitud_usuario1_idx", columns={"id_solicitud"}), @ORM\Index(name="fk_solicitud_centro_niveles_educativos1_idx", columns={"id_nivel"})})
  * @ORM\Entity
  */
 class SolicitudCentro
@@ -52,14 +52,14 @@ class SolicitudCentro
     /**
      * @var string|null
      *
-     * @ORM\Column(name="zona_escolar", type="string", length=2, nullable=true)
+     * @ORM\Column(name="zona_escolar", type="string", length=3, nullable=true)
      */
     private $zonaEscolar;
 
     /**
      * @var string|null
      *
-     * @ORM\Column(name="sector_escolar", type="string", length=2, nullable=true)
+     * @ORM\Column(name="sector_escolar", type="string", length=3, nullable=true)
      */
     private $sectorEscolar;
 
@@ -85,6 +85,20 @@ class SolicitudCentro
     private $curp;
 
     /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="acepta_terminos", type="boolean", nullable=true)
+     */
+    private $aceptaTerminos = '0';
+
+    /**
+     * @var \DateTime|null
+     *
+     * @ORM\Column(name="fecha_acepta", type="datetime", nullable=true, options={"default"="CURRENT_TIMESTAMP"})
+     */
+    private $fechaAcepta = 'CURRENT_TIMESTAMP';
+
+    /**
      * @var \NivelesEducativos
      *
      * @ORM\ManyToOne(targetEntity="NivelesEducativos")
@@ -99,7 +113,7 @@ class SolicitudCentro
      *
      * @ORM\ManyToOne(targetEntity="SolicitudUsuario")
      * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="id_usuario", referencedColumnName="id_solicitud_usuario")
+     *   @ORM\JoinColumn(name="id_solicitud", referencedColumnName="id_solicitud_usuario")
      * })
      */
     private $idSolicitud;
@@ -213,6 +227,30 @@ class SolicitudCentro
     public function setCurp(string $curp): self
     {
         $this->curp = $curp;
+
+        return $this;
+    }
+
+    public function getAceptaTerminos(): ?bool
+    {
+        return $this->aceptaTerminos;
+    }
+
+    public function setAceptaTerminos(?bool $aceptaTerminos): self
+    {
+        $this->aceptaTerminos = $aceptaTerminos;
+
+        return $this;
+    }
+
+    public function getFechaAcepta(): ?\DateTimeInterface
+    {
+        return $this->fechaAcepta;
+    }
+
+    public function setFechaAcepta(?\DateTimeInterface $fechaAcepta): self
+    {
+        $this->fechaAcepta = $fechaAcepta;
 
         return $this;
     }

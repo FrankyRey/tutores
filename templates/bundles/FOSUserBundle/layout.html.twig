@@ -8,8 +8,47 @@
     <img src="{{ asset('build/logo.png') }}" width="100" />
 {% endblock %}
 
+{% block page_title %}
+	Portal de Tutores
+{% endblock %}
+
+{% block page_subtitle %}
+{% endblock %}
+
 {% block page_content %}
-	{% for solicitud in solicitudes %}
-	    {{ solicitud.curp }}
-	{% endfor %}
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="panel-content">
+						<p class="text-center"><strong>Solicitudes Guardadas</strong></p>
+						<table class="table">
+        					<thead>
+            					<tr>
+                					<th>CURP</th>
+                					<th>Nivel</th>
+                					<th>Editar</th>
+                					<th>Acciones</th>
+            					</tr>
+        					</thead>
+        					<tbody>
+								{% for solicitud in solicitudes %}
+									<tr>
+	    								<td>{{ solicitud.curp }}</td>
+	    								<td>{{ solicitud.nivelConvocatoria }}</td>
+	    								<td><a href="{{ path('edit-solicitud-usuario', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Personales</a>
+	    									<a href="{{ path('edit-solicitud-centro', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Laborales</a></td>
+	    							</tr>
+	    						{% else %}
+	    							<tr>
+                						<td colspan="3">Usted aún no cuenta con solicitudes guardadas.</td>
+            						</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 {% endblock %}

@@ -8,6 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 //Entidades
 use App\Entity\NivelConvocatoria;
@@ -16,11 +17,13 @@ use App\Entity\SolicitudControl;
 use App\Entity\SolicitudCentro;
 use App\Entity\Municipios;
 use App\Entity\EntidadesFederativas;
+use App\Entity\Documentos;
+use App\Entity\CentrosDeTrabajo;
 use App\Form\SolicitudUsuarioType;
 use App\Form\SolicitudCentroType;
+use App\Form\DocumentosType;
 
 //Tipos de Entrada de datos
-
 
 class MainController extends AbstractController
 {
@@ -147,6 +150,7 @@ class MainController extends AbstractController
             return $this->redirectToRoute('solicitud');
         }
         $solicitudUsuario->setCurp($curp);
+        $nivel = $request->query->get('nivel');
 
         $solicitudUsuario->setNivelConvocatoria($request->query->get('nivel'));
 
@@ -161,12 +165,13 @@ class MainController extends AbstractController
             $entityManager->persist($solicitudUsuario);
             $entityManager->flush();
 
-            return $this->redirect('/user/solicitud-centro?curp='.$curp);
+            return $this->redirect('/user/solicitud-centro?curp='.$curp.'&nivel='.$nivel);
         }
 
         return $this->render('bundles/FOSUserBundle/nueva-solicitud.html.twig', [
             'solicitud_usuario' => $solicitudUsuario,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'nivel' => $request->query->get('nivel')
         ]);
     }
 
@@ -176,13 +181,26 @@ class MainController extends AbstractController
     public function solicitudCentro(Request $request)
     {
         $curp = $request->query->get('curp');
+        $nivel = $request->query->get('nivel');
 
         $solicitudCentro = new SolicitudCentro();
+
+        if($curp)
+        {
+            $solicitudCentro->setCurp($curp);
+            $repository = $this->getDoctrine()->getRepository(SolicitudUsuario::class);
+            $solicitudCentro->setIdSolicitud($repository->findOneBy([
+                'curp' => $curp,
+                'nivelConvocatoria' => $nivel
+            ]));
+        }
         $form = $this->createForm(SolicitudCentroType::class, $solicitudCentro, ['curp' => $curp]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager = $this->getDoctrine()->getManager();
+            $fecha = new DateTime();
+            $solicitudCentro->setFechaAcepta(new \DateTime());
             $entityManager->persist($solicitudCentro);
             $entityManager->flush();
 
@@ -190,8 +208,126 @@ class MainController extends AbstractController
         }
 
         return $this->render('bundles/FOSUserBundle/solicitud-centro.html.twig', [
-            'colicitud_centro' => $solicitudCentro,
+            'solicitud_centro' => $solicitudCentro,
             'form' => $form->createView(),
+            'nivel' => $nivel,
+        ]);
+    }
+
+    /**
+     * @Route("/user/cambio-cct", name="cambio-cct")
+     */
+    public function cambioCct(Request $request)
+    {
+        $cct = $request->request->get('cct');
+        $repository = $this->getDoctrine()->getRepository(CentrosDeTrabajo::class);
+
+        $cctE = $repository->findOneBy([
+            'cct' => $cct
+        ]);
+
+        if($cctE)
+        {
+            $responseArray = array(
+                'nombre_cct' => $cctE->getNombreCct(),
+                'zona' => $cctE->getZonaEscolar(),
+                'sector' => $cctE->getSectorEscolar(),
+            );
+        }
+        else
+        {
+            $responseArray = array();
+        }
+
+        return new JsonResponse($responseArray);
+    }
+
+    /**
+     * @Route("/user/documentos", name="documentos")
+     */
+    public function documentos(Request $request)
+    {
+        $documento = new Documentos();
+        $documento->setIdUser($this->getUser());
+
+        $form = $this->createForm(DocumentosType::class, $documento);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Recogemos el fichero
+            $file=$form['nombreDocumento']->getData();
+ 
+            // Sacamos la extensión del fichero
+            $ext=$file->guessExtension();
+ 
+            // Le ponemos un nombre al fichero
+            $file_name=time().".".$ext;
+ 
+            // Guardamos el fichero en el directorio uploads que estará en el directorio /web del framework
+            $file->move("prueba", $file_name);
+ 
+            // Establecemos el nombre de fichero en el atributo de la entidad
+            $documento->setNombreDocumento($file_name);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($documento);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('documentos');
+        }
+
+        return $this->render('bundles/FOSUserBundle/documentos.html.twig', [
+            'documento' => $documento,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/user/solicitud/personal/{idSolicitudUsuario}/edit", name="edit-solicitud-usuario", methods={"GET","POST"})
+     */
+    public function editarSolicitud(Request $request, SolicitudUsuario $solicitudUsuario)
+    {
+        $form = $this->createForm(SolicitudUsuarioType::class, $solicitudUsuario);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('bundles/FOSUserBundle/nueva-solicitud.html.twig', [
+            'solicitud_usuario' => $solicitudUsuario,
+            'form' => $form->createView(),
+            'nivel' => $solicitudUsuario->getNivelConvocatoria(),
+            'button_label' => 'Actualizar'
+        ]);
+    }
+
+    /**
+     * @Route("/user/solicitud/laboral/{idSolicitudUsuario}/edit", name="edit-solicitud-centro", methods={"GET","POST"})
+     */
+    public function editarSolicitudCentro(Request $request, SolicitudUsuario $solicitudUsuario)
+    {
+        $repository = $this->getDoctrine()->getRepository(SolicitudCentro::class);
+        $SolicitudCentro = new SolicitudCentro();
+        $solicitudCentro = $repository->findOneBy([
+            'idSolicitud' => $solicitudUsuario->getIdSolicitudUsuario()
+        ]);
+        $form = $this->createForm(SolicitudCentroType::class, $solicitudCentro, ['curp' => $solicitudUsuario->getCurp()]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirectToRoute('home');
+        }
+
+        return $this->render('bundles/FOSUserBundle/solicitud-centro.html.twig', [
+            'solicitud_centro' => $solicitudCentro,
+            'form' => $form->createView(),
+            'nivel' => $solicitudUsuario->getNivelConvocatoria(),
+            'button_label' => 'Actualizar'
         ]);
     }
 }

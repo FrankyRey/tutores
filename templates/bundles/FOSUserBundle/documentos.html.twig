@@ -1,0 +1,52 @@
+{% extends '@AdminLTE/layout/default-layout.html.twig' %}
+
+{% block logo_mini %}
+    <img src="{{ asset('build/logo_small.png') }}" width="40" />
+{% endblock %}
+
+{% block logo_large %}
+    <img src="{{ asset('build/logo.png') }}" width="100" />
+{% endblock %}
+
+{% block page_title %}
+	Subir Documentos
+{% endblock %}
+
+{% block page_subtitle %}
+{% endblock %}
+
+{% block page_content %}
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<div class="panel-content">
+						<p class="text-center"><strong>Anexo 3</strong></p>
+                        <p class="text-center"><strong>REQUISITOS PARA EL DESEMPEÑO DE LA FUNCIÓN</strong></p>
+                        <p class="text-center"> CICLO ESCOLAR 2019-2020</p>
+                        <p>Entidad Federativa: <strong>Puebla</strong></p>
+                        {{ form_start(form, { 'enctype':"multipart/form-data"}) }}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.nombreDocumento) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.referencia) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <a class="btn btn-danger" href="{{ path('home') }}">Salir</a>
+                                <button class="btn pull-righ">{{ button_label|default('Guardar') }}</button>
+                            </div>
+                        {{ form_end(form) }}
+                        <div class="ajax-results">
+                        </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts_page %}
+{% endblock %}

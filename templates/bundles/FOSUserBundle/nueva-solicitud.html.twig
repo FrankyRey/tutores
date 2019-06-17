@@ -22,13 +22,65 @@
 				<div class="panel-body">
 					<div class="panel-content">
 						<p class="text-center"><strong>Anexo 1</strong></p>
-                        <p class="text-center"><strong>FORMATO DE SOLICITUD PARA DESEMPEÑARLA FUNCIÓN DE TUTOTÍA EN EDUCACIÓN BÁSICA</strong></p>
+                        <p class="text-center"><strong>FORMATO DE SOLICITUD PARA DESEMPEÑARLA FUNCIÓN DE TUTOTÍA EN EDUCACIÓN {{ nivel|upper }}</strong></p>
                         <p class="text-center"> CICLO ESCOLAR 2019-2020</p>
-                        <p class="text-justify"> Este formulario tiene el rpopósito de contar con los datos generales del aspirante e identificar si cumple con los requisitos correspondientes a la función de tutotía</p>
+                        <p class="text-justify"> Este formulario tiene el propósito de contar con los datos generales del aspirante e identificar si cumple con los requisitos correspondientes a la función de tutotía</p>
                         <p>Entidad Federativa: <strong>Puebla</strong></p>
                         {{ form_start(form) }}
-                            {{ form_widget(form) }}
-                            <button class="btn">{{ button_label|default('Save') }}</button>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form_row(form.apellidoPaterno) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_row(form.apellidoMaterno) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_row(form.nombre) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    {{ form_row(form.curp) }}
+                                </div>
+                                <div class="col-md-4">
+                                    {{ form_row(form.rfc) }}
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>Dcomicilio</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.idEntidadFederativa) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.idMunicipioEntidadFederativa) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    {{ form_row(form.calle) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.noExterior) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.noInterior) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    {{ form_row(form.colonia) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.codigoPostal) }}
+                                </div>
+                            </div>
+                            <a class="btn btn-danger" href="{{ path("home") }}">Cancelar</a>
+                            <button class="btn">{{ button_label|default('Continuar') }}</button>
                         {{ form_end(form) }}
                         <div class="ajax-results">
                         </div>
@@ -43,7 +95,7 @@
     <script>
         $('#solicitud_usuario_idEntidadFederativa').change(function () {
             var citySelector = $(this);
-            console.log(citySelector.val());
+            //console.log(citySelector.val());
             // Request the neighborhoods of the selected city.
             $.ajax({
                 url: "{{ path('get-municipios') }}",
@@ -53,24 +105,24 @@
                     "cityid": citySelector.val()
                 },
                 success: function (data) {
-                    console.log(data);
+                    //console.log(data);
                     var neighborhoodSelect = $("#solicitud_usuario_idMunicipioEntidadFederativa");
 
                     // Remove current options
                     neighborhoodSelect.html('');
                     
                     // Empty value ...
-                    neighborhoodSelect.append('<option value> Select a neighborhood of ' + citySelector.find("option:selected").text() + ' ...</option>');
+                    neighborhoodSelect.append('<option value> Seleccione un municipio de ' + citySelector.find("option:selected").text() + ' ...</option>');
                     
                     
                     $.each(data, function (key, data) {
                         neighborhoodSelect.append('<option value="' + data.id + '">' + data.nombre + '</option>');
                     });
                 },
-                error: function (data) {
-                    alert("An error ocurred while loading data ...");
-                    $('div.ajax-results').html(data.responseText);
-                }
+                //error: function (data) {
+                    //alert("An error ocurred while loading data ...");
+                    //$('div.ajax-results').html(data.responseText);
+                //}
             });
         });
     </script>

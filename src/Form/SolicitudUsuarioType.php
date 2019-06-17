@@ -29,18 +29,45 @@ class SolicitudUsuarioType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('apellidoPaterno', TextType::class);
-        $builder->add('apellidoMaterno', TextType::class);
+        $builder->add('apellidoPaterno', TextType::class, [
+            'label' => 'Apellido Paterno'
+        ]);
+        $builder->add('apellidoMaterno', TextType::class, [
+            'required' => false,
+            'label' => 'Apellido Materno'
+        ]);
         $builder->add('nombre', TextType::class);
-        $builder->add('rfc', TextType::class);
-        $builder->add('curp', TextType::class);
+        $builder->add('rfc', TextType::class, [
+            'label' => 'RFC',
+            'attr' => [
+                'maxlength' => 13
+            ]
+        ]);
+        $builder->add('curp', TextType::class, [
+            'label' => 'CURP',
+            'attr' => [
+                'readonly' => true
+            ]
+        ]);
         $builder->add('calle', TextType::class);
-        $builder->add('noExterior', TextType::class);
-        $builder->add('noInterior', TextType::class);
-        $builder->add('codigoPostal', TextType::class);
+        $builder->add('noExterior', TextType::class, [
+            'label' => 'No. Exterior',
+            'required' => false
+        ]);
+        $builder->add('noInterior', TextType::class, [
+            'label' => 'No. Interior',
+            'required' => false
+        ]);
+        $builder->add('codigoPostal', TextType::class, [
+            'label' => 'Codigo Postal',
+            'attr' => [
+                'maxlength' => 5
+            ]
+        ]);
         $builder->add('colonia', TextType::class);
         $builder->add('idEntidadFederativa', EntityType::class, [
-            'placeholder' => 'Select a City...',
+            'label' => 'Entidad Federativa',
+            'placeholder' => '--Seleccione--',
             'class' => EntidadesFederativas::class,
             'choice_label' => 'nombreEntidadFederativa'
         ]);
@@ -65,8 +92,9 @@ class SolicitudUsuarioType extends AbstractType
 
             // Add the Neighborhoods field with the properly data
             $form->add('idMunicipioEntidadFederativa', EntityType::class, [
+                'label' => 'Municipio',
                 'required' => true,
-                'placeholder' => 'Select a City first ...',
+                'placeholder' => '--Seleccione--',
                 'class' => Municipios::class,
                 'choices' => $municipios
             ]);
@@ -117,8 +145,9 @@ class SolicitudUsuarioType extends AbstractType
         }
 
         $form->add('idMunicipioEntidadFederativa', EntityType::class, [
+            'label' => 'Municipio',
             'required' => true,
-            'placeholder' => 'Select a City first ...',
+            'placeholder' => '--Seleccione--',
             'class' => Municipios::class,
             'choices' => $municipios
         ]);

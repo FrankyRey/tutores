@@ -6,6 +6,7 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-migrations-bundle": "^2.0",
+        "dompdf/dompdf": "^0.8.3",
         "friendsofsymfony/user-bundle": "~2.0",
         "kevinpapst/adminlte-bundle": "^2.0",
         "sensio/framework-extra-bundle": "^5.3",

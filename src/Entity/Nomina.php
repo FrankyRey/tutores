@@ -43,9 +43,9 @@ class Nomina
     private $fechaInicio;
 
     /**
-     * @var \DateTime
+     * @var \DateTime|null
      *
-     * @ORM\Column(name="fecha_fin", type="date", nullable=false)
+     * @ORM\Column(name="fecha_fin", type="date", nullable=true)
      */
     private $fechaFin;
 
@@ -109,7 +109,7 @@ class Nomina
         return $this->fechaFin;
     }
 
-    public function setFechaFin(\DateTimeInterface $fechaFin): self
+    public function setFechaFin(?\DateTimeInterface $fechaFin): self
     {
         $this->fechaFin = $fechaFin;
 

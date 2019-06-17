@@ -22,13 +22,53 @@
 				<div class="panel-body">
 					<div class="panel-content">
 						<p class="text-center"><strong>Anexo 1</strong></p>
-                        <p class="text-center"><strong>FORMATO DE SOLICITUD PARA DESEMPEÑARLA FUNCIÓN DE TUTOTÍA EN EDUCACIÓN BÁSICA</strong></p>
+                        <p class="text-center"><strong>FORMATO DE SOLICITUD PARA DESEMPEÑARLA FUNCIÓN DE TUTOTÍA EN EDUCACIÓN {{ nivel|upper }}</strong></p>
                         <p class="text-center"> CICLO ESCOLAR 2019-2020</p>
                         <p class="text-justify"> Este formulario tiene el rpopósito de contar con los datos generales del aspirante e identificar si cumple con los requisitos correspondientes a la función de tutotía</p>
                         <p>Entidad Federativa: <strong>Puebla</strong></p>
                         {{ form_start(form) }}
-                            {{ form_widget(form) }}
-                            <button class="btn">{{ button_label|default('Save') }}</button>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{ form_row(form.cct) }}
+                                </div>
+                                <div class="col-md-5">
+                                    {{ form_row(form.nombreCct) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.zonaEscolar) }}
+                                </div>
+                                <div class="col-md-2">
+                                    {{ form_row(form.sectorEscolar) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    {{ form_row(form.telefonoCct) }}
+                                </div>
+                                <div class="col-md-5">
+                                    {{ form_row(form.idNivel) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.asignatura) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(form.taller) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(form.inicio) }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div clasS="col-md-12">
+                                    {{ form_widget(form.aceptaTerminos, { 'label': 'Acepto los terminos' }) }}
+                                </div>
+                            </div>
+                            <a class="btn btn-danger" href="{{ path("home") }}">Cancelar</a>
+                            <button class="btn">{{ button_label|default('Guardar') }}</button>
                         {{ form_end(form) }}
                         <div class="ajax-results">
                         </div>
@@ -41,31 +81,22 @@
 
 {% block javascripts_page %}
     <script>
-        $('#solicitud_usuario_idEntidadFederativa').change(function () {
-            var citySelector = $(this);
-            console.log(citySelector.val());
+        $('#solicitud_centro_cct').change(function () {
+            var cct = $(this);
+            console.log(cct.val());
             // Request the neighborhoods of the selected city.
             $.ajax({
-                url: "{{ path('get-municipios') }}",
+                url: "{{ path('cambio-cct') }}",
                 type: "POST",
                 dataType: "json",
                 data: {
-                    "cityid": citySelector.val()
+                    "cct": cct.val()
                 },
                 success: function (data) {
                     console.log(data);
-                    var neighborhoodSelect = $("#solicitud_usuario_idMunicipioEntidadFederativa");
-
-                    // Remove current options
-                    neighborhoodSelect.html('');
-                    
-                    // Empty value ...
-                    neighborhoodSelect.append('<option value> Select a neighborhood of ' + citySelector.find("option:selected").text() + ' ...</option>');
-                    
-                    
-                    $.each(data, function (key, data) {
-                        neighborhoodSelect.append('<option value="' + data.id + '">' + data.nombre + '</option>');
-                    });
+                    $('#solicitud_centro_nombreCct').val(data.nombre_cct);
+                    $('#solicitud_centro_zonaEscolar').val(data.zona);
+                    $('#solicitud_centro_sectorEscolar').val(data.sector);
                 },
                 error: function (data) {
                     alert("An error ocurred while loading data ...");

@@ -19,6 +19,8 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class SolicitudCentroType extends AbstractType
 {
@@ -36,22 +38,59 @@ class SolicitudCentroType extends AbstractType
             'curp' => $curp
         ]);
 
+        foreach ($centros as $centro)
+        {
+            $choices [] = array($centro->getCct() => $centro->getCct());
+        }
+
         $builder->add('cct', ChoiceType::class, [
-            'choices' => $centros,
-            'choice_label' => 'cct',
-            'choice_value' => 'cct'
+            'label' => 'Centro de Trabajo (CCT)',
+            'placeholder' => '--Seleccione--',
+            'choices' => $choices,
         ]);
-        $builder->add('inicio', TextType::class);
-        $builder->add('nombreCct', TextType::class);
-        $builder->add('telefonoCct', TextType::class);
-        $builder->add('zonaEscolar', TextType::class);
-        $builder->add('sectorEscolar', TextType::class);
-        $builder->add('asignatura', TextType::class);
-        $builder->add('taller', TextType::class);
+        $builder->add('inicio', DateType::class, [
+            'label' => 'Fecha de Ingreso',
+            'years' => range(date('Y')-50, date('Y'))
+        ]);
+        $builder->add('nombreCct', TextType::class, [
+            'label' => 'Nombre del CCT',
+            'attr' => [
+                'readonly' => true
+            ]
+        ]);
+        $builder->add('telefonoCct', TextType::class, [
+            'label' => 'Teléfono del CCT',
+            'required' => false
+        ]);
+        $builder->add('zonaEscolar', TextType::class, [
+            'label' => 'Zona Escolar',
+            'required' => false,
+            'attr' => [
+                'readonly' => true
+            ]
+        ]);
+        $builder->add('sectorEscolar', TextType::class, [
+            'label' => 'Sector Escolar',
+            'required' => false,
+            'attr' => [
+                'readonly' => true
+            ]
+        ]);
+        $builder->add('asignatura', TextType::class, [
+            'required' => false
+        ]);
+        $builder->add('taller', TextType::class, [
+            'required' => false
+        ]);
         $builder->add('idNivel', EntityType::class, [
-            'placeholder' => 'Select a City...',
+            'label' => 'Nivel Educativo del CCT',
+            'placeholder' => '--Seleccione--',
             'class' => NivelesEducativos::class,
             'choice_label' => 'nombreNivel'
+        ]);
+        $builder->add('aceptaTerminos', CheckboxType::class, [
+            'required' => true,
+            'label' => 'Acepto los <a>Terminos</a>'
         ]);
     }
 
