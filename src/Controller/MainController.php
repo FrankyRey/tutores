@@ -18,12 +18,17 @@ use App\Entity\SolicitudCentro;
 use App\Entity\Municipios;
 use App\Entity\EntidadesFederativas;
 use App\Entity\Documentos;
+use App\Entity\Nomina;
 use App\Entity\CentrosDeTrabajo;
 use App\Form\SolicitudUsuarioType;
 use App\Form\SolicitudCentroType;
 use App\Form\DocumentosType;
 
 //Tipos de Entrada de datos
+
+//PDF
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class MainController extends AbstractController
 {
@@ -328,6 +333,51 @@ class MainController extends AbstractController
             'form' => $form->createView(),
             'nivel' => $solicitudUsuario->getNivelConvocatoria(),
             'button_label' => 'Actualizar'
+        ]);
+    }
+
+    /**
+     * @Route("/user/ficha/{idSolicitudUsuario}", name="ficha", methods={"GET","POST"})
+     */
+    public function imprimirFicha(Request $request, SolicitudUsuario $solicitudUsuario)
+    {
+        $repository = $this->getDoctrine()->getRepository(SolicitudCentro::class);
+        $repositoryP = $this->getDoctrine()->getRepository(Nomina::class);
+        $SolicitudCentro = new SolicitudCentro();
+        $solicitudCentro = $repository->findOneBy([
+            'idSolicitud' => $solicitudUsuario->getIdSolicitudUsuario()
+        ]);
+        $plazas = $repositoryP->findBy([
+            'cct' => $solicitudCentro->getCct(),
+            'curp' => $solicitudUsuario->getCurp(),
+        ]);
+
+        // Configure Dompdf according to your needs
+        $pdfOptions = new Options();
+        $pdfOptions->set('defaultFont', 'Arial');
+        
+        // Instantiate Dompdf with our options
+        $dompdf = new Dompdf($pdfOptions);
+        
+        // Retrieve the HTML generated in our twig file
+        $html2 = $this->renderView('default/mypdf.html.twig', [
+            'solicitud_usuario' => $solicitudUsuario,
+            'solicitud_centro' => $solicitudCentro,
+            'plazas' => $plazas,
+        ]);
+        
+        // Load HTML to Dompdf
+        $dompdf->loadHtml($html2);
+        
+        // (Optional) Setup the paper size and orientation 'portrait' or 'portrait'
+        $dompdf->setPaper('A4', 'portrait');
+
+        // Render the HTML as PDF
+        $dompdf->render();
+
+        // Output the generated PDF to Browser (inline view)
+        $dompdf->stream("mypdf.pdf", [
+            "Attachment" => false
         ]);
     }
 }

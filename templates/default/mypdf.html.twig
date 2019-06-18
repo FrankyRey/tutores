@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Ficha de registro de tutor</title>
+        <style type="text/css">
+        	@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,600&display=swap');     
+        	body{
+            	font-family: 'Montserrat', sans-serif;           
+        	}
+    </style>
+    </head>
+    <body>
+    	<div style="text-align: center">
+        	<h3>Anexo 1</h3>
+        	<h4>FORMATO DE SOLICITUD PARA DESEMPEÑAR LA FUNCIÓN DE TUTORIA EN EDUCACIÓN BÁSICA</h4>
+        	<p></p>
+        	<p>Ciclo Escolar 2019 - 2020</p>
+        	<p></p>
+        </div>
+        <div style="text-align: justify;">
+        	<p>Este formato tiene el propósito de contar con los datos generales del aspirante e identificar si cumple con los requisitos correspondientes a la función de tutoría.</p>
+        	<p></p>
+        	<p>Entidad Federativa:<strong> Puebla</strong></p>
+        	<p></p>
+        </div>
+        <div style="text-align: center">
+        	<h3>A. DATOS PERSONALES</h3>
+        </div>
+        <div style="text-align: justify;">
+        	<label>NOMBRE COMPLETO</label>
+        	<p style="border-bottom: solid black 3px;">
+        		<span>{{ solicitud_usuario.apellidoPaterno }}</span>
+        		<span style="margin-left: 3rem;">{{ solicitud_usuario.apellidoMaterno }}</span>
+        		<span style="margin-left: 3rem;">{{ solicitud_usuario.nombre }}</span>
+        	</p>
+        	<div style="font-size: 9pt; margin-top:-15px;">
+        		<small>
+        			<span>Apellido Paterno</span><span style="margin-left: 3rem;">Apellido Materno</span><span style="margin-left: 3rem;">Nombre</span>
+        		</small>
+        	</div>
+        	<p>
+        		<span>Registro Federal de Contribuyentes </span><span style="width: 30rem; border-bottom: solid black 1px;">{{ solicitud_usuario.rfc }}</span>
+        	</p>
+        	<p>
+        		<span>Clave Única de Registro de Población </span><span>{{ solicitud_usuario.curp }}</span>
+        	</p>
+        	<p>
+        		<span>Edad </span><span>31</span>
+        	</p>
+        	<h5>DOMICILIO PARTICULAR</h5>
+        	<p>
+        		Calle: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.calle }} </span>
+        		No. Exterior: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.noExterior }}</span>
+        		No. Interior: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.noInterior }}</span>
+        	</p>
+        	<p>
+        		Colonia: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.colonia }} </span>
+        		Municipio: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.idMunicipioEntidadFederativa.nombreMunicipios }}</span>
+        	</p>
+        	<p>
+        		Entidad Federativa: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.idEntidadFederativa.nombreEntidadFederativa }} </span>
+        		Codigo Postal: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_usuario.codigoPostal }}</span>
+        	</p>
+        	<p>
+        		Correo Electrónico: <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ app.user.email }} </span>
+        	</p>
+        </div>
+        <div style="text-align: center">
+        	<h3>B. DATOS LABORALES</h3>
+        </div>
+        <div style="text-align: justify;">
+        	<p>
+        		<span>Clave del Centro de Trabajo </span><span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.cct }}</span>
+        	</p>
+        	<p>
+        		<span>Clave(s) Presupuestal(es) </span>
+        		{% for plaza in plazas %}
+        			<span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ plaza.plaza }} </span>
+        		{% endfor %}
+        	</p>
+        	<p>
+        		Antigüedad en la Función Docente <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.inicio|date('d/m/Y') }}</span>
+        	</p>
+        	<p>
+        		Nombre de la escuela en donde labora <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.nombreCct }}</span>
+        	</p>
+        	<p>
+        		Teléfono de la escuela <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.telefonoCct }}</span>
+        	</p>
+        	<p>
+        		Zona Escolar a la cual pertenece <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.zonaEscolar }}</span>
+        	</p>
+        	<p>
+        		Sector Escolar al cual pertenece <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.sectorEscolar }}</span>
+        	</p>
+        	<p>
+        		Nivel Educativo al que pertenece<span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.idNivel.nombreNivel }}</span>
+        	</p>
+        	<p>
+        		Asignatura que imparte (especificar en caso necesario) <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.asignatura }}</span>
+        	</p>
+        	<p>
+        		Taller que imparte (especificar en el caso de Técnicos Docentes) <span style="padding-left: 15px; padding-right: 15px; border-bottom: solid black 1px">{{ solicitud_centro.taller }}</span>
+        	</p>
+        </div>
+    </body>
+</html>

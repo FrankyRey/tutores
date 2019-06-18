@@ -13,7 +13,6 @@
 {% endblock %}
 
 {% block page_subtitle %}
-    .
 {% endblock %}
 
 {% block page_content %}
@@ -26,7 +25,7 @@
   						<div class="form-group" id="div-curp">
     						<input type="text" class="form-control" id="input-curp" placeholder="CURP" maxlength="18" minlength="18" style="text-transform:uppercase;">
   						</div>
-  						<button type="submit" class="btn btn-primary validar">Validar</button>
+  						<button type="submit" class="btn validar">Validar</button>
   						<div class="ajax-results">
   						</div>
 					</div>
@@ -37,7 +36,6 @@
 {% endblock %}
 
 {% block javascripts_page %}
-	<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script type="text/javascript">
     	$(document).on('click', 'button.validar', function(){
             that = $(this);
@@ -77,7 +75,7 @@
         $(document).on('change', 'select.form-control', function(){
             var curpS = document.getElementById("input-curp").value.toUpperCase();
             var nivelS = document.getElementById("nivel-convocatoria").value.toUpperCase();
-            var url = '<a class="btn btn-primary solicitud" href="{{ path('nueva-solicitud', {'curp': 'sustituirC', 'nivel': 'sustituirN'}) }}">Iniciar solicitud</a>'; 
+            var url = '<a class="btn solicitud" href="{{ path('nueva-solicitud', {'curp': 'sustituirC', 'nivel': 'sustituirN'}) }}">Iniciar solicitud</a>'; 
             url = url.replace("sustituirC", curpS);
             url = url.replace("sustituirN", nivelS);
         	console.log(url);

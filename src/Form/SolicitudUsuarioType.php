@@ -37,6 +37,13 @@ class SolicitudUsuarioType extends AbstractType
             'label' => 'Apellido Materno'
         ]);
         $builder->add('nombre', TextType::class);
+        $builder->add('telefonoFijo', TextType::class, [
+            'label' => 'Telefono Fijo',
+            'required' => false
+        ]);
+        $builder->add('telefonoCelular', TextType::class, [
+            'label' => 'Telefono Celular'
+        ]);
         $builder->add('rfc', TextType::class, [
             'label' => 'RFC',
             'attr' => [

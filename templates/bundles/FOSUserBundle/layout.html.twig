@@ -36,8 +36,13 @@
 									<tr>
 	    								<td>{{ solicitud.curp }}</td>
 	    								<td>{{ solicitud.nivelConvocatoria }}</td>
-	    								<td><a href="{{ path('edit-solicitud-usuario', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Personales</a>
-	    									<a href="{{ path('edit-solicitud-centro', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Laborales</a></td>
+	    								<td>
+	    									<a href="{{ path('edit-solicitud-usuario', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Personales</a>
+	    									<a href="{{ path('edit-solicitud-centro', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" class="btn btn-default">Datos Laborales</a>
+	    								</td>
+	    								<td>
+	    									<a href="{{ path('ficha', {'idSolicitudUsuario': solicitud.idSolicitudUsuario}) }}" target="_blank">Ficha</a>
+	    								</td>
 	    							</tr>
 	    						{% else %}
 	    							<tr>

@@ -34,10 +34,8 @@
                                     {{ form_row(form.referencia) }}
                                 </div>
                             </div>
-                            <div class="row">
-                                <a class="btn btn-danger" href="{{ path('home') }}">Salir</a>
-                                <button class="btn pull-righ">{{ button_label|default('Guardar') }}</button>
-                            </div>
+                            <a class="btn btn-danger" href="{{ path('home') }}">Salir</a>
+                            <button class="btn pull-righ">{{ button_label|default('Guardar') }}</button>
                         {{ form_end(form) }}
                         <div class="ajax-results">
                         </div>
