@@ -32,21 +32,19 @@ class SolicitudCentroType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $curp = $options['curp'];
-        $repo = $this->em->getRepository(Nomina::class);
-
-        $centros = $repo->findBy([
-            'curp' => $curp
-        ]);
+        $query = $this->em->createQuery('SELECT DISTINCT n.cct FROM App\Entity\Nomina n WHERE n.curp = :curp');
+        $query->setParameter('curp', $curp);
+        $centros = $query->getResult();
 
         foreach ($centros as $centro)
         {
-            $choices [] = array($centro->getCct() => $centro->getCct());
+            $choices [] = array('id' => $centro['cct'], 'label' => $centro['cct'],);
         }
 
         $builder->add('cct', ChoiceType::class, [
             'label' => 'Centro de Trabajo (CCT)',
             'placeholder' => '--Seleccione--',
-            'choices' => $choices,
+            'choices' => array_column($choices, 'label', 'id'),
         ]);
         $builder->add('inicio', DateType::class, [
             'label' => 'Fecha de Ingreso',

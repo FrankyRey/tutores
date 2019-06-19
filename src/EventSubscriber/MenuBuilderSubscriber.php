@@ -21,14 +21,16 @@ class MenuBuilderSubscriber implements EventSubscriberInterface
         $inicio = new MenuItemModel('home', 'Inicio', 'home', [], 'fas fa-home');
         $solicitud = new MenuItemModel('solicitud','Solicitud','solicitud',[], 'far fa-clipboard');
         $documentos = new MenuItemModel('documentos','Documentos','documentos',[], 'fas fa-upload');
-        $convocatoria = new MenuItemModel('convocatoria','Convocatoria','convocatoria',[], 'far fa-file-pdf');
+        $convocatoriaEb = new MenuItemModel('convocatoriaEb','Convocatoria Básica','convocatoriaEb',[], 'far fa-file-pdf');
+        $convocatoriaEm = new MenuItemModel('convocatoriaEm','Convocatoria MS','convocatoriaEm',[], 'far fa-file-pdf');
         //$resultados = new MenuItemModel('resultados','Resultados','resultados',[], 'fas fa-search');
         //$expedientes = new MenuItemModel('expedientes','Expedientes','expedientes',[], 'fas fa-search');
         
         $event->addItem($inicio);
         $event->addItem($solicitud);
         $event->addItem($documentos);
-        $event->addItem($convocatoria);
+        $event->addItem($convocatoriaEb);
+        $event->addItem($convocatoriaEm);
         //$event->addItem($resultados);
         //$event->addItem($expedientes);
 

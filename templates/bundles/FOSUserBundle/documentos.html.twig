@@ -44,6 +44,50 @@
 			</div>
 		</div>
 	</div>
+    {% if documentos %}
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="panel-content">
+                        <p class="text-center"><strong>Documentos en el sistema</strong></p>
+                        <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Documento</th>
+                                    <th colspan="2" class="text-center">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% set counter = 1 %}
+                                {% for documento in documentos %}
+                                    <tr>
+                                        <td> {{ counter }}</td>
+                                        <td>{{ documento.referencia }}</td>
+                                        <td class="text-center">
+                                            <a href="{{ path('descargar_documento', { 'idDocumentos': documento.idDocumentos }) }}" title="Descargar"><i class="fas fa-download"></i></a>
+                                        </td>
+                                        <td class="text-center">
+                                            <a href="{{ path('elimina_documento', { 'idDocumentos': documento.idDocumentos }) }}" title="Eliminar"><span class="text-danger"><i class="fas fa-times"></i></span></a>
+                                        </td>
+                                    </tr>
+                                    {% set counter = counter + 1 %}
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4">Usted aún no cuenta con documentos guardadas.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
 {% endblock %}
 
 {% block javascripts_page %}

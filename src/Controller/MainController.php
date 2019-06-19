@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Constraints\DateTime;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 //Entidades
 use App\Entity\NivelConvocatoria;
@@ -55,6 +57,14 @@ class MainController extends AbstractController
     }
 
     /**
+     * @Route("/tutores", name="liga")
+     */
+    public function redireccionarTutores()
+    {
+        return $this->redirectToRoute('home');
+    }
+
+    /**
      * @Route("/user/solicitud", name="solicitud")
      */
     public function solicitud()
@@ -63,11 +73,23 @@ class MainController extends AbstractController
     }
 
     /**
-     * @Route("/user/convocatoria", name="convocatoria")
+     * @Route("/user/convocatoriaBasica", name="convocatoriaEb")
      */
-    public function convocatoria()
+    public function convocatoriaEb()
     {
-        return $this->render('bundles/FOSUserBundle/solicitud.html.twig');
+        $response = new BinaryFileResponse('./convocatorias/basica.pdf');
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'Tutoría_EB_2019_2020.pdf');
+        return $response;
+    }
+
+    /**
+     * @Route("/user/convocatoriaMedia", name="convocatoriaEm")
+     */
+    public function convocatoriaEm()
+    {
+        $response = new BinaryFileResponse('./convocatorias/media.pdf');
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,'Tutoría_EMS_2019_2020.pdf');
+        return $response;
     }
 
     /**
@@ -252,8 +274,12 @@ class MainController extends AbstractController
      */
     public function documentos(Request $request)
     {
+        $repository = $this->getDoctrine()->getRepository(Documentos::class);
         $documento = new Documentos();
         $documento->setIdUser($this->getUser());
+        $documentos = $repository->findBy([
+            'idUser' => $this->getUser()->getId()
+        ]);
 
         $form = $this->createForm(DocumentosType::class, $documento);
         $form->handleRequest($request);
@@ -284,6 +310,7 @@ class MainController extends AbstractController
         return $this->render('bundles/FOSUserBundle/documentos.html.twig', [
             'documento' => $documento,
             'form' => $form->createView(),
+            'documentos' => $documentos,
         ]);
     }
 
@@ -315,10 +342,14 @@ class MainController extends AbstractController
     public function editarSolicitudCentro(Request $request, SolicitudUsuario $solicitudUsuario)
     {
         $repository = $this->getDoctrine()->getRepository(SolicitudCentro::class);
-        $SolicitudCentro = new SolicitudCentro();
         $solicitudCentro = $repository->findOneBy([
             'idSolicitud' => $solicitudUsuario->getIdSolicitudUsuario()
         ]);
+
+        if(!$solicitudCentro){
+            return $this->redirect('/user/solicitud-centro?curp='.$solicitudUsuario->getCurp().'&nivel='.$solicitudUsuario->getNivelConvocatoria());
+        }
+
         $form = $this->createForm(SolicitudCentroType::class, $solicitudCentro, ['curp' => $solicitudUsuario->getCurp()]);
         $form->handleRequest($request);
 
@@ -343,10 +374,15 @@ class MainController extends AbstractController
     {
         $repository = $this->getDoctrine()->getRepository(SolicitudCentro::class);
         $repositoryP = $this->getDoctrine()->getRepository(Nomina::class);
-        $SolicitudCentro = new SolicitudCentro();
         $solicitudCentro = $repository->findOneBy([
             'idSolicitud' => $solicitudUsuario->getIdSolicitudUsuario()
         ]);
+
+        if(!$solicitudCentro)
+        {
+            return $this->render('bundles/FOSUserBundle/error.html.twig');
+        }
+
         $plazas = $repositoryP->findBy([
             'cct' => $solicitudCentro->getCct(),
             'curp' => $solicitudUsuario->getCurp(),
@@ -379,5 +415,26 @@ class MainController extends AbstractController
         $dompdf->stream("mypdf.pdf", [
             "Attachment" => false
         ]);
+    }
+
+    /**
+     * @Route("/user/documento/{idDocumentos}/eliminar", name="elimina_documento", methods={"GET","POST"})
+     */
+    public function eliminarDocumento(Request $request, Documentos $documento)
+    {
+        $this->getDoctrine()->getManager()->remove($documento);
+        $this->getDoctrine()->getManager()->flush();
+        unlink('./prueba/'.$documento->getNombreDocumento());
+        return $this->redirectToRoute('documentos');
+    }
+
+    /**
+     * @Route("/user/documento/{idDocumentos}/descargar", name="descargar_documento", methods={"GET","POST"})
+     */
+    public function descargarDocumento(Request $request, Documentos $documento)
+    {
+        $response = new BinaryFileResponse('./prueba/'.$documento->getNombreDocumento());
+        $response->setContentDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT,$documento->getReferencia().'_'.$documento->getNombreDocumento());
+        return $response;
     }
 }
